@@ -109,25 +109,13 @@ app.post("/api/searchFace", upload.single("image"), async (req, res) => {
 
   const imageName = randomImageName();
 
-  const params = {
-    Bucket: bucketName,
-    Key: imageName,
-    Body: resizedImg,
-    ContentType: req.file.mimetype,
-  };
-  const command = new PutObjectCommand(params);
-
   await s3.send(command);
 
   const input = {
     // SearchFacesByImageRequest
     CollectionId: "face-database", // required
     Image: {
-      S3Object: {
-        // S3Object
-        Bucket: bucketName,
-        Name: imageName,
-      },
+      Bytes: resizedImg
     },
   };
 
